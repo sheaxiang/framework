@@ -1,0 +1,39 @@
+{
+    "name": "sheaxiang/framework",
+    "description": "The Shea Framework.",
+    "authors": [
+        {
+            "name": "shea",
+            "email": "642290531@qq.com"
+        }
+    ],
+    "license": "MIT",
+    "keywords": ["framework", "shea", "sheaxiang"],
+    "require": {
+        "php" : ">=7.0.0",
+        "psr/container": "~1.0",
+        "vlucas/phpdotenv": "^3.6",
+        "symfony/var-dumper": "^4.3",
+        "symfony/http-foundation": "^4.3",
+        "symfony/http-kernel": "~4.3",
+        "symfony/finder": "^4.3",
+        "symfony/routing": "^4.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.3"
+    },
+    "autoload": {
+        "files": [
+            "src/shea/Component/Support/helpers.php"
+        ],
+        "psr-4": {
+          "Shea\\": "src/shea/"
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    }
+}
