@@ -49,5 +49,5 @@ interface Container extends ContainerInterface
      * @param  array  $parameters
      * @return mixed
      */
-    public function make($abstract, array $parameters = []);
+    public function make($abstract, array $parameters = [], bool $newInstance = false);
 }

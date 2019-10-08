@@ -60,7 +60,7 @@ class Container implements ArrayAccess, ContainerContract
         }
     }
 
-    public function make($abstract, $parameters = [], bool $newInstance = false)
+    public function make($abstract, array $parameters = [], bool $newInstance = false)
     {
         $concrete = $this->getAlias($abstract);
         
