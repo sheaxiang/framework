@@ -8,7 +8,6 @@ use Shea\Contracts\Debug\ExceptionHandler;
 use Shea\Contracts\Foundation\Application;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
-use Symfony\Component\HttpFoundation\Response;
 
 class HandleExceptions 
 {

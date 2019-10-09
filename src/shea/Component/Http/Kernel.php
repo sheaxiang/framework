@@ -17,7 +17,9 @@ class Kernel implements SheaKernel
         \Shea\Bootstrap\LoadEnvironmentVariables::class,
         \Shea\Bootstrap\LoadConfiguration::class,
         \Shea\Bootstrap\HandleExceptions::class,
+        \Shea\Bootstrap\RegisterFacades::class,
         \Shea\Bootstrap\LoadRouter::class,
+        
     ];
 
     public function __construct(App $app, Router $router)

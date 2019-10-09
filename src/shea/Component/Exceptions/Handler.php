@@ -4,10 +4,11 @@ namespace Shea\Component\Exceptions;
 
 use Exception;
 use Shea\Container;
+use Shea\Contracts\Debug\ExceptionHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class Handler
+class Handler implements ExceptionHandler
 {
     protected $container;
 

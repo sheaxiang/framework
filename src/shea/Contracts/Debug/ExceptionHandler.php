@@ -22,13 +22,4 @@ interface ExceptionHandler
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $e);
-
-    /**
-     * Render an exception to the console.
-     *
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @param  \Exception  $e
-     * @return void
-     */
-    public function renderForConsole($output, Exception $e);
 }

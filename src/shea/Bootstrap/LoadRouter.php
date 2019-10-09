@@ -2,9 +2,8 @@
 
 namespace Shea\Bootstrap;
 
-use Shea\App;
-use Shea\Component\Config\Repository;
 use Shea\Component\Routing\Router;
+use Shea\Contracts\Foundation\Application;
 use Symfony\Component\Finder\Finder;
 
 class LoadRouter
@@ -16,14 +15,14 @@ class LoadRouter
         $this->router = $router;
     }
     
-    public function bootstrap(App $app)
+    public function bootstrap(Application $app)
     {
        //todo  缓存
 
         $this->loadRouterFiles($app);
     }
 
-    protected function loadRouterFiles(App $app)
+    protected function loadRouterFiles(Application $app)
     {
         //返回规范化的绝对路径名
         $routerPath = realpath($app->routerPath());

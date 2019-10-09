@@ -4,11 +4,11 @@ namespace Shea\Bootstrap;
 
 use Dotenv\Dotenv;
 use Dotenv\Exception\InvalidFileException;
-use Shea\App;
+use Shea\Contracts\Foundation\Application;
 
 class LoadEnvironmentVariables
 {
-    public function bootstrap(App $app)
+    public function bootstrap(Application $app)
     {
         try {
             $this->createDotenv($app)->safeLoad();

@@ -4,13 +4,13 @@ namespace Shea\Bootstrap;
 
 use Exception;
 use SplFileInfo;
-use Shea\App;
 use Shea\Component\Config\Repository;
+use Shea\Contracts\Foundation\Application;
 use Symfony\Component\Finder\Finder;
 
 class LoadConfiguration
 {
-    public function bootstrap(App $app)
+    public function bootstrap(Application $app)
     {
        //todo  缓存
         $items = [];
@@ -24,7 +24,7 @@ class LoadConfiguration
         mb_internal_encoding('UTF-8');
     }
 
-    protected function loadConfigurationFiles(App $app, $config)
+    protected function loadConfigurationFiles(Application $app, $config)
     {
         $files = $this->getConfigurationFiles($app);
 
@@ -37,7 +37,7 @@ class LoadConfiguration
         }
     }
 
-    protected function getConfigurationFiles(App $app)
+    protected function getConfigurationFiles(Application $app)
     {
         $files = [];
 

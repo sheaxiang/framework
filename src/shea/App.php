@@ -39,6 +39,7 @@ class App extends Container implements ApplicationContract
         }
         
         $this->registerBaseBindings();
+        $this->basicsInstance();
     }
 
     protected function registerBaseBindings()
@@ -47,14 +48,8 @@ class App extends Container implements ApplicationContract
        static::setInstance($this);
 
        //todo
-       $this->instance('Shea\App', $this);
-
+       $this->instance(App::class, $this);
        $this->instance(Container::class, $this);
-    }
-
-    public function init()
-    {
-        
     }
 
     public function register($service, $force = false)
@@ -119,6 +114,16 @@ class App extends Container implements ApplicationContract
     
         foreach ($bootstrappers as $bootstrapper) {
             $this->make($bootstrapper)->bootstrap($this);
+        }
+    }
+
+    public function basicsInstance()
+    {
+        foreach ([
+            'app' => \Shea\App::class,
+            'router' => \Shea\Component\Routing\Router::class
+        ] as $key => $instance) {
+            $this->bind($key, $instance);
         }
     }
 
