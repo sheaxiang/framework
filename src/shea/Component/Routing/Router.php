@@ -51,6 +51,27 @@ class Router
         return $route;
     }
 
+    public function group(array $attributes, $routes)
+    {
+        $this->updateGroupStack($attributes);
+
+        // Once we have updated the group stack, we'll load the provided routes and
+        // merge in the group's attributes when the routes are created. After we
+        // have created the routes, we will pop the attributes off the stack.
+        $this->loadRoutes($routes);
+
+        array_pop($this->groupStack);
+    }
+
+    protected function loadRoutes($routes)
+    {
+        if ($routes instanceof Closure) {
+            $routes($this);
+        } else {
+            require $routes;
+        }
+    }
+
     protected function prefix($uri)
     {
         return trim(trim($this->getLastGroupPrefix(), '/').'/'.trim($uri, '/'), '/') ?: '/';
@@ -85,7 +106,7 @@ class Router
         }
         
         $action['controller'] = $action['uses'];
-
+        
         return $action;
     }
 
@@ -108,6 +129,10 @@ class Router
 
     public function updateGroupStack(array $attributes)
     {
+        if (! empty($this->groupStack)) {
+            $attributes = array_merge($attributes, end($this->groupStack));
+        }
+
         $this->groupStack[] = $attributes;
     }
     
@@ -151,8 +176,8 @@ class Router
         return $response->prepare($request);
     }
 
-    public function __call($name, $arguments)
+    public function __call($method, $parameters)
     {
-        dd('call:'.$name);
+        return (new RouteRegistrar($this))->attribute($method, $parameters[0]);
     }
 }

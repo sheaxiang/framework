@@ -33,6 +33,19 @@ if (! function_exists('value')) {
     }
 }
 
+if (! function_exists('base_path')) {
+    /**
+     * Get the path to the base of the install.
+     *
+     * @param  string  $path
+     * @return string
+     */
+    function base_path($path = '')
+    {
+        return app()->basePath().($path ? DIRECTORY_SEPARATOR.$path : $path);
+    }
+}
+
 if (! function_exists('env')) {
     /**
      * Gets the value of an environment variable.

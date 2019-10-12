@@ -6,7 +6,7 @@ use Shea\Contracts\Foundation\Application as ApplicationContract;
 
 class App extends Container implements ApplicationContract
 {
-    const VERSION = '0.0.1'; 
+    const VERSION = '1.2.0'; 
 
     protected $basePath;
 
@@ -52,6 +52,11 @@ class App extends Container implements ApplicationContract
        $this->instance(Container::class, $this);
     }
 
+    public function registerConfiguredProviders()
+    {
+        (new ProviderRepository($this))->load($this->config['app.providers']);
+    }
+
     public function register($service, $force = false)
     {
         $registered = $this->getService($service);
@@ -62,11 +67,15 @@ class App extends Container implements ApplicationContract
 
         //如果是字符,将new
         if (is_string($service)) {
-            $service = new $service();
+            $service = new $service($this);
         }
 
         if (method_exists($service, 'register')) {
             $service->register();
+        }
+
+        if (method_exists($service, 'boot')) {
+            $service->boot();
         }
 
         //检测是否有这个属性
@@ -75,6 +84,8 @@ class App extends Container implements ApplicationContract
         }
 
         $this->services[] = $service;
+
+        return $service;
     }
 
     /**
@@ -123,13 +134,8 @@ class App extends Container implements ApplicationContract
             'app' => \Shea\App::class,
             'router' => \Shea\Component\Routing\Router::class
         ] as $key => $instance) {
-            $this->bind($key, $instance);
+            $this->singleton($key, $instance);
         }
-    }
-
-    public function singleton($abstract, $concrete = null)
-    {
-        $this->bind($abstract, $concrete);
     }
 
     public function hasBeenBootstrapped()

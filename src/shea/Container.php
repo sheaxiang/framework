@@ -60,6 +60,11 @@ class Container implements ArrayAccess, ContainerContract
         }
     }
 
+    public function singleton($abstract, $concrete = null)
+    {
+        $this->bind($abstract, $concrete);
+    }
+
     public function make($abstract, array $parameters = [], bool $newInstance = false)
     {
         $concrete = $this->getAlias($abstract);
@@ -153,6 +158,9 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function getAlias($abstract)
     {
+        if (!\is_string($abstract)) {
+            dd($abstract);
+        }
         if (!isset($this->bind[$abstract])) {
             return $abstract;
         }
