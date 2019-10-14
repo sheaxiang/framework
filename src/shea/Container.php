@@ -25,6 +25,9 @@ class Container implements ArrayAccess, ContainerContract
     protected $instances;
 
     protected $bind;
+
+    //注册别名
+    protected $aliases = [];
     
     /**
      * 获取当前容器实例
