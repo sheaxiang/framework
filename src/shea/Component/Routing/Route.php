@@ -42,6 +42,9 @@ class Route
         }
     }
 
+    /**
+     * 运行
+     */
     public function run()
     {
         $this->container = $this->container ?: new Container;
@@ -51,6 +54,7 @@ class Route
                 return $this->runController();
             }
 
+            //运行闭包
             return $this->runCallable();
         } catch (HttpResponseException $e) {
             return $e->getResponse();

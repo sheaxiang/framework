@@ -2,11 +2,12 @@
 
 namespace Shea;
 
+use Shea\Component\Routing\RoutingServiceProvider;
 use Shea\Contracts\Foundation\Application as ApplicationContract;
 
 class App extends Container implements ApplicationContract
 {
-    const VERSION = '1.2.0'; 
+    const VERSION = '1.2.1'; 
 
     protected $basePath;
 
@@ -38,18 +39,27 @@ class App extends Container implements ApplicationContract
             $this->setBasePath($basePath);
         }
         
-        $this->registerBaseBindings();
         $this->basicsInstance();
+        $this->registerCoreContainerAliases();
+        $this->registerBaseServiceProviders();
     }
 
-    protected function registerBaseBindings()
+    //注册基本实例
+    protected function basicsInstance()
     {
        //将基本绑定注册到容器中
        static::setInstance($this);
 
        //todo
-       $this->instance(App::class, $this);
+       $this->instance('app', $this);
+
        $this->instance(Container::class, $this);
+       
+    }
+
+    protected function registerBaseServiceProviders()
+    {
+        $this->register(new RoutingServiceProvider($this));
     }
 
     public function registerConfiguredProviders()
@@ -99,6 +109,9 @@ class App extends Container implements ApplicationContract
         }, ARRAY_FILTER_USE_BOTH))[0] ?? null;
     }
 
+    /**
+     * 设置初始路径
+     */
     public function setBasePath($basePath)
     {
         //删除字符
@@ -128,13 +141,18 @@ class App extends Container implements ApplicationContract
         }
     }
 
-    public function basicsInstance()
+    /**
+     * 注册别名,用于实例化
+     */
+    public function registerCoreContainerAliases()
     {
         foreach ([
-            'app' => \Shea\App::class,
-            'router' => \Shea\Component\Routing\Router::class
-        ] as $key => $instance) {
-            $this->singleton($key, $instance);
+            'app' => [\Shea\App::class, \Shea\Contracts\Foundation\Application::class],
+            'router' => [\Shea\Component\Routing\Router::class, Shea\Component\Routing\Registrar::class]
+        ] as $key => $aliases) {
+            foreach ($aliases as $alias) {
+                $this->alias($key, $alias);
+            }
         }
     }
 

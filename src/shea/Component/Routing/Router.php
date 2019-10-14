@@ -13,7 +13,7 @@ use Shea\Contracts\Support\Jsonable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
-class Router
+class Router implements Registrar
 {
     protected $container;
 
@@ -21,15 +21,48 @@ class Router
 
     protected $groupStack;
 
-    public function __construct(RouteCollection $routes, Container $container)
+    //any
+    public static $verbs = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'];
+
+    public function __construct(Container $container = null)
     {
-        $this->routes = $routes;
-        $this->container = $container;
+        $this->routes = new RouteCollection;
+        $this->container = $container ?: new Container;
     }
 
     public function get($uri, $action = null)
     {
         return $this->addRoute(['GET', 'HEAD'], $uri, $action);
+    }
+
+    public function post($uri, $action = null)
+    {
+        return $this->addRoute('POST', $uri, $action);
+    }
+
+    public function put($uri, $action = null)
+    {
+        return $this->addRoute('PUT', $uri, $action);
+    }
+
+    public function patch($uri, $action = null)
+    {
+        return $this->addRoute('PATCH', $uri, $action);
+    }
+
+    public function delete($uri, $action = null)
+    {
+        return $this->addRoute('DELETE', $uri, $action);
+    }
+
+    public function options($uri, $action = null)
+    {
+        return $this->addRoute('OPTIONS', $uri, $action);
+    }
+
+    public function any($uri, $action = null)
+    {
+        return $this->addRoute(self::$verbs, $uri, $action);
     }
 
     public function addRoute($methods, $uri, $action)
@@ -144,6 +177,7 @@ class Router
         return $this->runRoute($request, $this->findRoute($request));
     }
 
+    //从注册的路由中发现
     public function findRoute($request)
     {
         $route = $this->routes->match($request);
@@ -160,6 +194,7 @@ class Router
         );
     }
 
+    //解析返回格式
     public function prepareResponse($request, $response)
     {
         if (! $response instanceof SymfonyResponse &&
