@@ -70,7 +70,7 @@ class Container implements ArrayAccess, ContainerContract
 
     public function make($abstract, array $parameters = [], bool $newInstance = false)
     {
-        $concrete = $this->getAlias($abstract);
+        $abstract = $this->getAlias($abstract);
         
         if (isset($this->instances[$abstract]) && !$newInstance) {
             return $this->instances[$abstract];
@@ -161,14 +161,16 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function getAlias($abstract)
     {
-        if (!\is_string($abstract)) {
-            dd($abstract);
-        }
-        if (!isset($this->bind[$abstract])) {
+        if (!isset($this->aliases[$abstract])) {
             return $abstract;
         }
 
-        return $this->bind[$abstract];
+        return $this->aliases[$abstract];
+    }
+
+    public function alias($abstract, $alias)
+    {
+        $this->aliases[$alias] = $abstract;
     }
 
     /**
@@ -176,8 +178,8 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function instance($abstract, $instance)
     {
-        $abstract = $this->getAlias($abstract);
-        
+        unset($this->aliases[$abstract]);
+
         $this->instances[$abstract] = $instance;
 
         return $instance;
@@ -188,8 +190,6 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function bind($abstract, $concrete = null)
     {
-        //先删除旧的实例
-        //$this->dropStaleInstances($abstract);
         if (! $concrete instanceof Closure) {
             $concrete = $this->getClosure($abstract, $concrete);
         }
