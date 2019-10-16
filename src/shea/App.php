@@ -7,7 +7,7 @@ use Shea\Contracts\Foundation\Application as ApplicationContract;
 
 class App extends Container implements ApplicationContract
 {
-    const VERSION = '1.2.1'; 
+    const VERSION = '1.3.0';
 
     protected $basePath;
 
