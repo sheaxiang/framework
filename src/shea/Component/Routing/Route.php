@@ -7,11 +7,14 @@ use Shea\Component\Http\Exceptions\HttpResponseException;
 use Shea\Component\Http\Request;
 use Shea\Component\Routing\Matching\MethodValidator;
 use Shea\Component\Routing\Matching\UriValidator;
+use Shea\Component\Support\Arr;
 use Shea\Component\Support\Str;
 use Shea\Container;
 
 class Route
 {
+    use RouteDependencyResolverTrait;
+
     public $uri;
 
     public $methods;
@@ -35,7 +38,7 @@ class Route
     {
         $this->uri = $uri;
         $this->methods = (array) $methods;
-        $this->action = $action;
+        $this->action = $this->parseAction($action);//处理action,有可能为闭包
 
         if (isset($this->action['prefix'])) {
             $this->prefix($this->action['prefix']);
@@ -66,6 +69,11 @@ class Route
         return $this->controllerDispatcher()->dispatch(
             $this, $this->getController(), $this->getControllerMethod()
         );
+    }
+
+    protected function parseAction($action)
+    {
+        return RouteAction::parse($this->uri, $action);
     }
 
     public function getController()
@@ -228,5 +236,15 @@ class Route
         $this->container = $container;
 
         return $this;
+    }
+
+    public function parameter($name, $default = null)
+    {
+        return Arr::get($this->parameters(), $name, $default);
+    }
+
+    public function __get($key)
+    {
+        return $this->parameter($key);
     }
 }

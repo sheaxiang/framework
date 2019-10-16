@@ -114,7 +114,6 @@ class Router implements Registrar
     {
         if (! empty($this->groupStack)) {
             $last = end($this->groupStack);
-
             return $last['prefix'] ?? '';
         }
 
@@ -163,7 +162,8 @@ class Router implements Registrar
     public function updateGroupStack(array $attributes)
     {
         if (! empty($this->groupStack)) {
-            $attributes = array_merge($attributes, end($this->groupStack));
+            //这里需要把多个属性拼接,比如prefix,api/home/index
+            $attributes = RouteGroup::merge($attributes, end($this->groupStack));
         }
 
         $this->groupStack[] = $attributes;

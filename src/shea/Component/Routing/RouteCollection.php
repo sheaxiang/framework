@@ -12,7 +12,6 @@ class RouteCollection
     public function match($request)
     {
         $routes = $this->get($request->getMethod());
-        
         //匹配路由
         $route = $this->matchAgainstRoutes($routes, $request);
 

@@ -148,7 +148,8 @@ class App extends Container implements ApplicationContract
     {
         foreach ([
             'app' => [\Shea\App::class, \Shea\Contracts\Foundation\Application::class],
-            'router' => [\Shea\Component\Routing\Router::class, Shea\Component\Routing\Registrar::class]
+            'router' => [\Shea\Component\Routing\Router::class, Shea\Component\Routing\Registrar::class],
+            'request' => [\Shea\Component\Http\Request::class, \Symfony\Component\HttpFoundation\Request::class]
         ] as $key => $aliases) {
             foreach ($aliases as $alias) {
                 $this->alias($key, $alias);

@@ -2,10 +2,14 @@
 
 namespace Shea\Component\Http;
 
+use Shea\Component\Http\Concerns\InteractsWithInput;
+use Shea\Component\Support\Arr;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Request extends SymfonyRequest 
 {
+    use InteractsWithInput;
+    
     public static function capture()
     {
         static::enableHttpMethodParameterOverride();
@@ -60,8 +64,85 @@ class Request extends SymfonyRequest
         return $pattern == '' ? '/' : $pattern;
     }
 
+    /**
+     * 对已编码的url字符串进行编码
+     * @return string
+     */
     public function decodedPath()
     {
         return rawurldecode($this->path());
+    }
+
+    public function ajax()
+    {
+        return $this->isXmlHttpRequest();
+    }
+
+    public function pjax()
+    {
+        return $this->headers->get('X-PJAX') == true;
+    }
+
+    /**
+     * 判断请求是否通过https
+     * @return bool
+     */
+    public function secure()
+    {
+        return $this->isSecure();
+    }
+
+    /**
+     * 获取ip
+     * @return string|null
+     */
+    public function ip()
+    {
+        return $this->getClientIp();
+    }
+
+    public function ips()
+    {
+        return $this->getClientIps();
+    }
+
+    public function userAgent()
+    {
+        return $this->headers->get('User-Agent');
+    }
+
+    public function get($key, $default = null)
+    {
+        return parent::get($key, $default);
+    }
+
+    public function session()
+    {
+        if (!$this->hasSession()) {
+            throw new RuntimeException('Session store not set on request.');
+        }
+
+        return $this->session;
+    }
+
+    public function getSession()
+    {
+        return $this->session;
+    }
+
+    public function __isset($key)
+    {
+        return ! is_null($this->__get($key));
+    }
+
+    public function __get($key)
+    {
+        if (array_key_exists($key, $this->all())) {
+            return Arr::get($this->all(), $key);
+        }
+
+        //todo 获取路由参数
+
+        return null;
     }
 }

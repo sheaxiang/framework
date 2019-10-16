@@ -71,7 +71,7 @@ class Container implements ArrayAccess, ContainerContract
     public function make($abstract, array $parameters = [], bool $newInstance = false)
     {
         $abstract = $this->getAlias($abstract);
-        
+
         if (isset($this->instances[$abstract]) && !$newInstance) {
             return $this->instances[$abstract];
         }
@@ -164,7 +164,7 @@ class Container implements ArrayAccess, ContainerContract
         if (!isset($this->aliases[$abstract])) {
             return $abstract;
         }
-
+        
         return $this->aliases[$abstract];
     }
 
